@@ -43,6 +43,10 @@ func createRedisPool(host, pass string) *redis.Pool {
 	}
 }
 
+func serveFavicon(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static"+r.RequestURI)
+}
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
@@ -77,10 +81,11 @@ func main() {
 	}
 
 	router := mux.NewRouter()
-	blog.RegisterRoutes(router, db, pool)
-
 	router.NotFoundHandler = http.HandlerFunc(routes.NotFound)
+	router.HandleFunc("/favicon{suffix}", serveFavicon)
+	router.HandleFunc("/mstile{suffix}", serveFavicon)
 
+	blog.RegisterRoutes(router, db, pool)
 	if config.Debug {
 		debug.RegisterRoutes(router, db, pool)
 	}
