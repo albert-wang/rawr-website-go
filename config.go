@@ -19,6 +19,8 @@ type Config struct {
 	PostgresConnectionURL string
 	RedisHost             string
 	RedisPassword         string
+	StatsDHost            string
+	StatsDPrefix          string
 }
 
 // Sets fields in a struct from environment variables, according to their `env` tag.

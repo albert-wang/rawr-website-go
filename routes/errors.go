@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/albert-wang/tracederror"
@@ -38,6 +39,23 @@ func RenderErrorPage(w http.ResponseWriter, r *http.Request, initialError *HttpE
 	err = RenderTemplateWithData(w, r, tpl, initialError)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func NotFound(w http.ResponseWriter, r *http.Request) {
+	log.Print("Tried to load path=", r.RequestURI, " not found")
+
+	tpl, err := LoadTemplates("404.tpl")
+	if err != nil {
+		//Stuffs super screwed
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	err = RenderTemplateWithData(w, r, tpl, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 }
