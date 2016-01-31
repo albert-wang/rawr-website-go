@@ -30,6 +30,12 @@ gulp.task('assets:less', function() {
 		.pipe(gulp.dest("static/css"));
 })
 
+gulp.task('assets:lib', function() {
+	gulp.src('assets/lib/*')
+		.pipe(changed("static/lib"))
+		.pipe(gulp.dest("static/lib"));
+})
+
 gulp.task('assets:typescript', function() {
 	var stream = gulp.src("assets/ts/*.ts")
 		.pipe(typescript())
@@ -38,6 +44,15 @@ gulp.task('assets:typescript', function() {
 	stream.on("error", function() {
 		console.log(arguments);
 	});
+})
+
+gulp.task('assets:image', function() {
+	gulp.src("assets/img/*")
+		.pipe(changed("static/img"))
+		.pipe(imagemin({
+			progressive: false
+		}))
+		.pipe(gulp.dest("static/img"))
 })
 
 gulp.task('flag:release', function() {
@@ -56,17 +71,21 @@ gulp.task('assets:minimizejs', function() {
 		.pipe(gulp.dest("static/js"));
 })
 
-gulp.task('default', ['assets:favicons', 'assets:less', 'assets:typescript']);
+gulp.task('default', ['assets:favicons', 'assets:less', 'assets:typescript', 'assets:image', 'assets:lib']);
 gulp.task('release', function() {
 	sequence('flag:release', ['default'], ['assets:minimizecss', 'assets:minimizejs']);
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
 	watch("assets/less/*.less", function() {
 		gulp.start("assets:less");
 	});
 
 	watch("assets/ts/*.ts", function() {
 		gulp.start("assets:typescript");
+	});
+
+	watch("assets/img/*", function() {
+		gulp.start("assets:image");
 	});
 })

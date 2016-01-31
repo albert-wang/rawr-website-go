@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/albert-wang/tracederror"
@@ -21,6 +22,8 @@ func Wrap(fn func(http.ResponseWriter, *http.Request, Context) error, DB *sqlx.D
 		})
 
 		if err != nil {
+			log.Print(err)
+
 			inner := tracederror.Inner(err)
 			maybeHttpErr, ok := inner.(*HttpError)
 			if ok {

@@ -1,8 +1,57 @@
+@rawr-dark: #1e1e1e;
+@rawr-grey: #c6dcfd;
 
-core {
-	background: white;
+* {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+}
 
-	.dong {
-		color: red;
+.header {
+	background-color: @rawr-dark;
+	height: 34px;
+	padding: 5px;
+
+	border-bottom: 1px solid @rawr-grey;
+
+	.container {
+		height: 100%;
+
+		img {
+
+		}
+	}
+}
+
+.navigation {
+	li {
+		display: inline-block;
+		margin: 0px 10px;
+
+		h1 {
+			margin-bottom: 0px;
+		}
+
+		h6 {
+			margin-top: 0px;
+		}
+	}
+
+	li:hover {
+		background-color: @rawr-dark;
+	}
+}
+
+.background {
+	width: 100%;
+	min-width: 960px;
+
+	height: auto;
+	position: absolute;
+	z-index: -1;
+	overflow: hidden;
+
+	img {
+		width: 100%;
 	}
 }
