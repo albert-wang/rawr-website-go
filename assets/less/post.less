@@ -1,0 +1,25 @@
+@paragraph-margin: 30px;
+
+.post {
+	padding: 25px 0 0 0;
+
+	p {
+		margin-bottom: @paragraph-margin;
+	}
+
+	p + pre {
+		margin-top: (-1 * @paragraph-margin + 10px);
+	}
+
+	pre {
+		margin-bottom: @paragraph-margin;
+		border-radius: 0px;
+		border: none;
+		padding: 0px;
+		font-size: 16px;
+	}
+}
+
+.postcontent {
+	font-size: 20px;
+}

@@ -3,11 +3,11 @@ package blog
 import (
 	"github.com/albert-wang/rawr-website-go/routes"
 
-	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
-	"github.com/jmoiron/sqlx"
 )
 
-func RegisterRoutes(router *mux.Router, db *sqlx.DB, pool *redis.Pool) {
-	router.HandleFunc("/", routes.Wrap(getIndex, db, pool))
+func RegisterRoutes(router *mux.Router, ctx *routes.Context) {
+	router.HandleFunc("/", routes.Wrap(getIndex, ctx))
+	router.HandleFunc("/post/{id}/{slug}", routes.Wrap(getPost, ctx))
+	//router.HandleFunc("/recent/{page}", routes.Wrap(getRecent, db, pool))
 }

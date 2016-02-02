@@ -13,7 +13,9 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/quipo/statsd"
 
+	"github.com/albert-wang/rawr-website-go/admin"
 	"github.com/albert-wang/rawr-website-go/blog"
+	"github.com/albert-wang/rawr-website-go/config"
 	"github.com/albert-wang/rawr-website-go/debug"
 	"github.com/albert-wang/rawr-website-go/routes"
 )
@@ -50,34 +52,34 @@ func serveFavicon(w http.ResponseWriter, r *http.Request) {
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
-	config := Config{}
-	err := LoadConfigurationFromFileAndEnvironment(os.Args[1], &config)
+	cfg := config.Config{}
+	err := config.LoadConfigurationFromFileAndEnvironment(os.Args[1], &cfg)
 	if err != nil {
 		log.Fatal("Could not load configuration file=", os.Args[1], " due to error=", err)
 	}
 
 	// Open up the DB and Redis connections.
-	db, err := sqlx.Open("postgres", config.PostgresConnectionURL)
+	db, err := sqlx.Open("postgres", cfg.PostgresConnectionURL)
 	if err != nil {
-		log.Fatal("Could not open postgres connection with url=", config.PostgresConnectionURL, " error=", err)
+		log.Fatal("Could not open postgres connection with url=", cfg.PostgresConnectionURL, " error=", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Fatal("Could not ping postgres connection with url=", config.PostgresConnectionURL, " error=", err)
+		log.Fatal("Could not ping postgres connection with url=", cfg.PostgresConnectionURL, " error=", err)
 	}
 
-	pool := createRedisPool(config.RedisHost, config.RedisPassword)
+	pool := createRedisPool(cfg.RedisHost, cfg.RedisPassword)
 	conn := pool.Get()
 	_, err = conn.Do("PING")
 	if err != nil {
-		log.Fatal("Could not ping redis DB with host=", config.RedisHost, " error=", err)
+		log.Fatal("Could not ping redis DB with host=", cfg.RedisHost, " error=", err)
 	}
 
-	client := statsd.NewStatsdClient(config.StatsDHost, config.StatsDPrefix)
+	client := statsd.NewStatsdClient(cfg.StatsDHost, cfg.StatsDPrefix)
 	err = client.CreateSocket()
 	if err != nil {
-		log.Fatal("Could not create statsd socket with host=", config.RedisHost, " error=", err)
+		log.Fatal("Could not create statsd socket with host=", cfg.RedisHost, " error=", err)
 	}
 
 	router := mux.NewRouter()
@@ -85,14 +87,17 @@ func main() {
 	router.HandleFunc("/favicon{suffix}", serveFavicon)
 	router.HandleFunc("/mstile{suffix}", serveFavicon)
 
-	blog.RegisterRoutes(router, db, pool)
-	if config.Debug {
-		debug.RegisterRoutes(router, db, pool)
+	ctx := routes.CreateContext(db, pool, &cfg)
+
+	blog.RegisterRoutes(router, ctx)
+	admin.RegisterRoutes(router, ctx)
+	if cfg.Debug {
+		debug.RegisterRoutes(router, ctx)
 	}
 
 	go collectStats(db, pool, client)
 
-	listeningAddress := fmt.Sprintf("localhost:%d", config.Port)
+	listeningAddress := fmt.Sprintf("localhost:%d", cfg.Port)
 
 	log.Print("Listening on addr=", listeningAddress)
 	http.ListenAndServe(listeningAddress, router)

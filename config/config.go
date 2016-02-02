@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"encoding/json"
@@ -22,7 +22,6 @@ type Config struct {
 	StatsDHost            string
 	StatsDPrefix          string
 
-	// Informational bindings.
 	IPAddress string
 }
 

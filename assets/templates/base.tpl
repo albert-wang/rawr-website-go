@@ -9,6 +9,9 @@
 		<meta name="msapplication-TileColor" content="#343d5b">
 		<meta name="msapplication-square310x310logo" content="/mstile-310x310.png"> 
 
+		<link href="//fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" type="text/css">
+		<link href='https://fonts.googleapis.com/css?family=Source+Serif+Pro' rel='stylesheet' type='text/css'>
+
 		<script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script>
 		<script type="text/javascript">
 			var _gaq = _gaq || [];
@@ -35,48 +38,64 @@
 		</div>
 
 		<div class="background">
-			<img src="{{ s3img "web/light.png" }}"/>
+			<img src="/static/img/triangles_light.png"/>
 		</div>
 
 		<div class="container">
 			<img class="pull-right" src="/static/img/indie_light.png"/>
-
 			<!-- Navigation -->
 			<div class="row navigation">
-				<ul>
+				<div class="col-xs-12">
+					<ul>
 					<li>
-						<h1>Home</h1>
-						<h6>the frontpage</h6>
+						<a href="/">
+							<h1>Home</h1>
+							<h6>the frontpage</h6>
+						</a>
 					</li>
 
 					<li>
-						<h1>Blog</h1>
-						<h6>read the blog</h6>
+						<a href="/blog/recent">
+							<h1>Blog</h1>
+							<h6>read the blog</h6>
+						</a>
 					</li>
 
 					<li>
-						<h1>Gallery</h1>
-						<h6>browse the gallery</h6>
+						<a href="/gallery">
+							<h1>Gallery</h1>
+							<h6>browse the gallery</h6>
+						</a>
 					</li>
 
 					<li>
-						<h1>Projects</h1>
-						<h6>what i'm workign on</h6>
+						<a href="/projects">
+							<h1>Projects</h1>
+							<h6>what i'm working on</h6>
+						</a>
 					</li>
 
 					<li>
-						<h1>About</h1>
-						<h6>about rawr productions</h6>
+						<a href="/about">
+							<h1>About</h1>
+							<h6 class="adjust-a">about rawr productions</h6>
+						</a>
 					</li>
-				</ul>
+					</ul>
+				</div>
 			</div>
+		</div>
 
+		<div class="container main">
 			{{ template "body" . }} 
 		</div>
 
-	
-		
-		
-		
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted pull-right">
+					© 2012 - {{ timef "2006" }} rawr productions | powered by golang
+				</p>
+			</div>
+		</footer>
 	</body>
 </html>

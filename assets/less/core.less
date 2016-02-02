@@ -1,5 +1,23 @@
 @rawr-dark: #1e1e1e;
 @rawr-grey: #c6dcfd;
+@rawr-white: #ffffff;
+@rawr-dark-blue: #343d5b;
+@rawr-blue: #505e8c;
+@rawr-med-blue: #6d80bf;
+@rawr-light-blue: #e5ecff;
+
+@footer-size: 30px;
+
+.title-faced {
+	font-family: 'Open Sans', Arial;
+}
+
+.body-faced {
+	font-family: 'Source Serif Pro', georgia, serif;
+	font-size: 18px;
+	line-height: 1.6;
+	letter-spacing: -0.005em;
+}
 
 * {
 	margin: 0px;
@@ -7,49 +25,184 @@
 	border: 0px;
 }
 
+.no1 {
+	border-top: 3px solid #305eb2;
+}
+
+.no2 {
+	border-top: 3px solid #4b32b3;
+}
+
+.no3 {
+	border-top: 3px solid #005D54;
+}
+
+.no4 {
+	border-top: 3px solid #cb9533;
+}
+
+.no5 {
+	border-top: 3px solid #A64F00;
+}
+
+.no6 {
+	border-top: 3px solid #FF9200;
+}
+
+.no7 {
+	border-top: 3px solid #66A3D2;
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	margin-bottom: @footer-size;
+}
+
+
+a {
+	color: @rawr-dark-blue;
+}
+
+a:visited {
+	color: @rawr-blue;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+
+	height: @footer-size;
+}
+
 .header {
-	background-color: @rawr-dark;
+	background-color: @rawr-dark-blue;
 	height: 34px;
 	padding: 5px;
 
-	border-bottom: 1px solid @rawr-grey;
+	border-bottom: 2px solid @rawr-light-blue;
 
 	.container {
 		height: 100%;
-
-		img {
-
-		}
 	}
 }
 
+.mini-header {
+	text-transform: uppercase;
+}
+
+.feature {
+	.title-faced;
+
+	color: white;
+	padding-top: 35px;
+	padding-bottom: 35px;
+	margin: -10px -10px 0 -10px;
+
+	background: @rawr-dark url('/static/img/hero.png') no-repeat right center;
+
+	&.no-hero {
+		background: @rawr-dark;
+	}
+	
+	.col {
+		margin-left: 5px;
+	}
+
+	h1 {
+		font-size: 3.3em;
+	}
+
+	a {
+		color: @rawr-med-blue;
+	}
+
+	a:visited {
+		color: @rawr-blue;
+	}
+}
+
+.postcontent {
+	.body-faced;
+}
+
+.main {
+	padding: 10px;
+	background-color: fade(@rawr-white, 70%);
+}
+
+.message {
+	.title-faced;
+
+	padding: 25px 8px 35px 8px;
+
+	h1 {
+		font-size: 3.3em;
+	}
+
+	p {
+		.body-faced;
+
+		font-size: 1.5em;
+	}
+}
+
+.previews {
+	padding: 0px 10px;
+}
+
 .navigation {
+	.title-faced;
+
+	ul {
+		margin-left: 5px;
+	}
+
 	li {
 		display: inline-block;
-		margin: 0px 10px;
+		margin: 0px 20px 10px 0px;
 
 		h1 {
-			margin-bottom: 0px;
+			margin: 0px;
 		}
 
 		h6 {
-			margin-top: 0px;
+			margin: 2px 0 0 0;
+			padding-left: 2px;
+
+			&.adjust-a {
+				padding-left: 0px;
+			}
 		}
 	}
 
 	li:hover {
-		background-color: @rawr-dark;
+		background-color: @rawr-blue;
+		color: @rawr-light-blue;
+	}
+
+	a {
+		color: black;
+	}
+
+	a:hover {
+		color: @rawr-light-blue;
+		text-decoration: none;
 	}
 }
 
 .background {
 	width: 100%;
-	min-width: 960px;
-
-	height: auto;
+	min-width: 2200px;
+	height: 100%;
 	position: absolute;
 	z-index: -1;
 	overflow: hidden;
+	right: left;
 
 	img {
 		width: 100%;
