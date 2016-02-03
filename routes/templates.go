@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
@@ -14,8 +15,81 @@ import (
 	"github.com/russross/blackfriday"
 )
 
+type MarkdownRenderer struct {
+	*blackfriday.Html
+}
+
+// Options
+var flags = blackfriday.HTML_USE_XHTML | blackfriday.HTML_USE_SMARTYPANTS | blackfriday.HTML_SMARTYPANTS_FRACTIONS | blackfriday.HTML_SMARTYPANTS_DASHES | blackfriday.HTML_SMARTYPANTS_LATEX_DASHES
+var extensions = 0 |
+	blackfriday.EXTENSION_NO_INTRA_EMPHASIS |
+	blackfriday.EXTENSION_TABLES |
+	blackfriday.EXTENSION_FENCED_CODE |
+	blackfriday.EXTENSION_AUTOLINK |
+	blackfriday.EXTENSION_STRIKETHROUGH |
+	blackfriday.EXTENSION_SPACE_HEADERS |
+	blackfriday.EXTENSION_HEADER_IDS |
+	blackfriday.EXTENSION_BACKSLASH_LINE_BREAK |
+	blackfriday.EXTENSION_DEFINITION_LISTS
+
+func escapeSingleChar(char byte) (string, bool) {
+	if char == '"' {
+		return "&quot;", true
+	}
+	if char == '&' {
+		return "&amp;", true
+	}
+	if char == '<' {
+		return "&lt;", true
+	}
+	if char == '>' {
+		return "&gt;", true
+	}
+	return "", false
+}
+
+func attrEscape(out *bytes.Buffer, src []byte) {
+	org := 0
+	for i, ch := range src {
+		if entity, ok := escapeSingleChar(ch); ok {
+			if i > org {
+				// copy all the normal characters since the last escape
+				out.Write(src[org:i])
+			}
+			org = i + 1
+			out.WriteString(entity)
+		}
+	}
+	if org < len(src) {
+		out.Write(src[org:])
+	}
+}
+
+// Overwrite img to add a <p> caption below it, encase the image in a div for positioning and sizing purposes.
+func (m *MarkdownRenderer) Image(out *bytes.Buffer, link []byte, title []byte, alt []byte) {
+	out.WriteString("<div class=\"img ")
+	attrEscape(out, alt);
+	out.WriteByte('"')
+	out.WriteByte('>')
+	
+	m.Html.Image(out, link, title, alt)
+
+	out.WriteString("<p class=\"caption\">")
+	attrEscape(out, title)
+	out.WriteString("</p></div>")
+}
+
 func templateBlackfriday(mkd string) template.HTML {
-	res := blackfriday.MarkdownCommon([]byte(mkd))
+// set up the HTML renderer
+	renderer := blackfriday.HtmlRenderer(flags, "", "").(*blackfriday.Html)
+	wrappedRenderer := &MarkdownRenderer{
+		Html: renderer,
+	}
+
+	res := blackfriday.MarkdownOptions([]byte(mkd), wrappedRenderer, blackfriday.Options{
+		Extensions: extensions,
+	})
+
 	return template.HTML(res)
 }
 
