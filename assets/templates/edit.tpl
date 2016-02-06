@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="/static/lib/monokai-sublime.css">
 	<script src="/static/lib/highlight.pack.js"></script>
 
+	<link rel="stylesheet" href="/static/css/edit.css">
+
 	<title>Editing</title>
 
 	<script>
@@ -21,8 +23,7 @@
 				"processData" : false,
 				"success" : function(r) {
 					currentPreview = r;
-					$(preview).removeClass("postcontent post").addClass("postcontent post");
-					preview.innerHTML = r;
+					preview.innerHTML = "<div class='post postcontent'>" + r + "</div>";
 
 					$('pre code').each(function(i, block) {
 						hljs.highlightBlock(block);
@@ -56,6 +57,7 @@
 					"title" : $("#title").val(), 
 					"publish" : parseInt($("#publish").val()),
 					"category" : parseInt($("#category").val()),
+					"hero" : $("#hero").val(),
 				}),
 				"processData" : false
 			});
@@ -69,6 +71,19 @@
 <div class="row">
 	<div class="col-xs-12">
 		<textarea></textarea>
+
+		<div class="row">
+			<div class="col-xs-6">
+				<span>Hero Image</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<input type="text" class="form-control" id="hero" placeholder="Hero Link" value="{{ .Post.Hero }}"/>
+			</div>
+		</div>
+
+
 		<div class="row">
 			<div class="col-xs-2">
 				<span>Publish</span>

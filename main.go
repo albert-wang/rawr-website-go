@@ -15,6 +15,7 @@ import (
 
 	"github.com/albert-wang/rawr-website-go/admin"
 	"github.com/albert-wang/rawr-website-go/blog"
+	"github.com/albert-wang/rawr-website-go/cli"
 	"github.com/albert-wang/rawr-website-go/config"
 	"github.com/albert-wang/rawr-website-go/debug"
 	"github.com/albert-wang/rawr-website-go/routes"
@@ -82,12 +83,18 @@ func main() {
 		log.Fatal("Could not create statsd socket with host=", cfg.RedisHost, " error=", err)
 	}
 
+	ctx := routes.CreateContext(db, pool, &cfg)
+
+	//Check for arguments.
+	if len(os.Args) > 2 {
+		cli.Dispatch(os.Args[2:], ctx)
+		return
+	}
+
 	router := mux.NewRouter()
 	router.NotFoundHandler = http.HandlerFunc(routes.NotFound)
 	router.HandleFunc("/favicon{suffix}", serveFavicon)
 	router.HandleFunc("/mstile{suffix}", serveFavicon)
-
-	ctx := routes.CreateContext(db, pool, &cfg)
 
 	blog.RegisterRoutes(router, ctx)
 	admin.RegisterRoutes(router, ctx)

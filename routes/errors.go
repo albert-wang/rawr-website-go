@@ -28,15 +28,25 @@ func MakeHttpError(err error, status int, req *http.Request) error {
 	return tracederror.NewWithContext(res, req)
 }
 
+type errorPage struct {
+	Code    int
+	Message string
+}
+
 func RenderErrorPage(w http.ResponseWriter, r *http.Request, initialError *HttpError) {
-	tpl, err := LoadTemplates("error.tpl")
+	tpl, err := LoadTemplates("base.tpl", "error.tpl")
 	if err != nil {
 		//Stuffs super screwed
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = RenderTemplateWithData(w, r, tpl, initialError)
+	data := errorPage{
+		Code:    initialError.StatusCode,
+		Message: http.StatusText(initialError.StatusCode),
+	}
+
+	err = RenderTemplateWithData(w, r, tpl, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,17 +55,9 @@ func RenderErrorPage(w http.ResponseWriter, r *http.Request, initialError *HttpE
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
 	log.Print("Tried to load path=", r.RequestURI, " not found")
-
-	tpl, err := LoadTemplates("404.tpl")
-	if err != nil {
-		//Stuffs super screwed
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
-
-	err = RenderTemplateWithData(w, r, tpl, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
+	RenderErrorPage(w, r, &HttpError{
+		Err:        nil,
+		StatusCode: http.StatusNotFound,
+		Request:    r,
+	})
 }

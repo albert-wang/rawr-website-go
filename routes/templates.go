@@ -17,9 +17,11 @@ import (
 
 type MarkdownRenderer struct {
 	*blackfriday.Html
+
+	Marker int
 }
 
-// Options
+//Options
 var flags = blackfriday.HTML_USE_XHTML | blackfriday.HTML_USE_SMARTYPANTS | blackfriday.HTML_SMARTYPANTS_FRACTIONS | blackfriday.HTML_SMARTYPANTS_DASHES | blackfriday.HTML_SMARTYPANTS_LATEX_DASHES
 var extensions = 0 |
 	blackfriday.EXTENSION_NO_INTRA_EMPHASIS |
@@ -53,7 +55,7 @@ func attrEscape(out *bytes.Buffer, src []byte) {
 	for i, ch := range src {
 		if entity, ok := escapeSingleChar(ch); ok {
 			if i > org {
-				// copy all the normal characters since the last escape
+				//copy all the normal characters since the last escape
 				out.Write(src[org:i])
 			}
 			org = i + 1
@@ -65,22 +67,23 @@ func attrEscape(out *bytes.Buffer, src []byte) {
 	}
 }
 
-// Overwrite img to add a <p> caption below it, encase the image in a div for positioning and sizing purposes.
+//Overwrite img to add a <p> caption below it, encase the image in a div for positioning and sizing purposes.
 func (m *MarkdownRenderer) Image(out *bytes.Buffer, link []byte, title []byte, alt []byte) {
-	out.WriteString("<div class=\"img ")
-	attrEscape(out, alt);
+	out.WriteString("<div class=\"img-container ")
+	attrEscape(out, alt)
 	out.WriteByte('"')
 	out.WriteByte('>')
-	
-	m.Html.Image(out, link, title, alt)
 
+	out.WriteString("<div class=\"img\">")
+	m.Html.Image(out, link, title, alt)
+	out.WriteString("<div>")
 	out.WriteString("<p class=\"caption\">")
 	attrEscape(out, title)
-	out.WriteString("</p></div>")
+	out.WriteString("</p></div></div></div>")
 }
 
 func templateBlackfriday(mkd string) template.HTML {
-// set up the HTML renderer
+	//Set up the HTML renderer
 	renderer := blackfriday.HtmlRenderer(flags, "", "").(*blackfriday.Html)
 	wrappedRenderer := &MarkdownRenderer{
 		Html: renderer,

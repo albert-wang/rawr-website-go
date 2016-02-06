@@ -11,6 +11,10 @@
 			$('pre code').each(function(i, block) {
 				hljs.highlightBlock(block);
 			});
+
+			$('.postcontent p').filter(function() {
+				return this.innerHTML == "";
+			}).remove();
 		});
 	</script>
 {{ end }}
@@ -18,7 +22,7 @@
 {{ define "body" }}
 	<div class="row feature no-hero">
 		<div class="col-xs-8 col-xs-offset-2">
-			<h6 class="mini-header">title</h6>
+			<h6 class="mini-header">{{ .Post.Category }}</h6>
 			<h1>{{ .Post.Title }}</h1>
 		</div>
 	</div>

@@ -14,6 +14,7 @@ type BlogPost struct {
 	Title      string     `db:"title"`
 	Content    string     `db:"content"`
 	Publish    *time.Time `db:"publish"`
+	Hero       string     `db:"hero"`
 
 	Category string `db:"category_value"`
 }
@@ -47,8 +48,8 @@ func (b *BlogPost) Full() string {
 
 func (b *BlogPost) Save(db sqlx.Ext) error {
 	if b.ID == 0 {
-		q := `INSERT INTO blog_posts (category, title, content, publish) 
-		                      VALUES(:category,:title,:content,:publish)
+		q := `INSERT INTO blog_posts (category, title, content, publish, hero) 
+		                      VALUES(:category,:title,:content,:publish,:hero)
 		      RETURNING id
 		`
 
@@ -63,7 +64,8 @@ func (b *BlogPost) Save(db sqlx.Ext) error {
 		return err
 	} else {
 		q := `UPDATE blog_posts SET 
-			category = :category, title = :title, content = :content, publish = :publish
+			category = :category, title = :title, content = :content, publish = :publish,
+			hero = :hero
 			WHERE id = :id
 		`
 		_, err := sqlx.NamedExec(db, q, b)
