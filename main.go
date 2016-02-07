@@ -12,7 +12,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/mitchellh/goamz/aws"
-	"github.com/mitchellh/goamz/s3"
 	"github.com/quipo/statsd"
 
 	"github.com/albert-wang/rawr-website-go/admin"
