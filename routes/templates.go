@@ -104,6 +104,10 @@ func add(a, b int) int {
 	return a + b
 }
 
+func linearGradient(path string) template.CSS {
+	return template.CSS(fmt.Sprintf("linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('%s')", path))
+}
+
 func slug(s string) string {
 	s = strings.TrimSpace(s)
 	s = strings.ToLower(s)
@@ -131,6 +135,7 @@ func LoadTemplates(str ...string) (*template.Template, error) {
 		"add":         add,
 		"slug":        slug,
 		"timef":       timef,
+		"darkenimg":   linearGradient,
 	}
 
 	res = res.Funcs(mapping)

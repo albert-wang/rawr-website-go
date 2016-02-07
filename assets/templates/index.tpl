@@ -2,9 +2,6 @@
 	<title>Rawr Productions</title>
 {{ end }}
 
-{{ define "header" }}
-{{ end }}
-
 {{ define "body" }}
 	<div class="row feature">
 		<div class="col-xs-12 col-sm-6 col">

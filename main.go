@@ -11,6 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"github.com/mitchellh/goamz/aws"
+	"github.com/mitchellh/goamz/s3"
 	"github.com/quipo/statsd"
 
 	"github.com/albert-wang/rawr-website-go/admin"
@@ -83,7 +85,12 @@ func main() {
 		log.Fatal("Could not create statsd socket with host=", cfg.RedisHost, " error=", err)
 	}
 
-	ctx := routes.CreateContext(db, pool, &cfg)
+	auth, err := aws.SharedAuth()
+	if err != nil {
+		log.Fatal("Could not load aws authentication")
+	}
+
+	ctx := routes.CreateContext(db, pool, auth, &cfg)
 
 	//Check for arguments.
 	if len(os.Args) > 2 {

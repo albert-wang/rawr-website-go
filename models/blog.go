@@ -85,30 +85,32 @@ func GetBlogPostByID(db sqlx.Ext, id int32) (*BlogPost, error) {
 	return &res, tracederror.New(err)
 }
 
-func GetRecentBlogPosts(db sqlx.Ext, count int32) ([]BlogPost, error) {
+func GetRecentBlogPosts(db sqlx.Ext, count int32, offset int32) ([]BlogPost, error) {
 	q := `
 		SELECT p.*, c.category AS category_value 
 		FROM blog_posts p JOIN blog_categories c ON c.id = p.category
-		WHERE publish IS NOT NULL
+		WHERE publish IS NOT NULL AND NOT c.hidden
 		ORDER BY publish DESC
 		LIMIT $1
+		OFFSET $2
 	`
 
 	res := []BlogPost{}
-	err := sqlx.Select(db, &res, q, count)
+	err := sqlx.Select(db, &res, q, count, offset)
 	return res, tracederror.New(err)
 }
 
-func GetRecentPostsInCategory(db sqlx.Ext, category string, count int32) ([]BlogPost, error) {
+func GetRecentPostsInCategory(db sqlx.Ext, category string, count int32, offset int32) ([]BlogPost, error) {
 	q := `
 		SELECT p.*, c.category AS category_value 
 		FROM blog_posts p JOIN blog_categories c ON c.id = p.category
 		WHERE publish IS NOT NULL AND c.category = $1
 		ORDER BY publish DESC
 		LIMIT $2
+		OFFSET $3
 	`
 
 	res := []BlogPost{}
-	err := sqlx.Select(db, &res, q, category, count)
+	err := sqlx.Select(db, &res, q, category, count, offset)
 	return res, tracederror.New(err)
 }

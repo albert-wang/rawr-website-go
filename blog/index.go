@@ -21,12 +21,12 @@ func getIndex(w http.ResponseWriter, r *http.Request, ctx routes.Context) error 
 		return tracederror.New(err)
 	}
 
-	recent, err := models.GetRecentBlogPosts(ctx.DB, 4)
+	recent, err := models.GetRecentBlogPosts(ctx.DB, 4, 0)
 	if err != nil {
 		return tracederror.New(err)
 	}
 
-	featured, err := models.GetRecentPostsInCategory(ctx.DB, "featured", 1)
+	featured, err := models.GetRecentPostsInCategory(ctx.DB, "featured", 1, 0)
 	if err != nil {
 		return tracederror.New(err)
 	}

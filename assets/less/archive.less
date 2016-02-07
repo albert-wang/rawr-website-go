@@ -1,0 +1,44 @@
+@import "variables.less";
+
+.main {
+	padding: 0px;
+}
+
+.title-row {
+	font-family: 'Open Sans', Arial;
+
+	color: white;
+	padding: 10px 0;
+	margin: 30px 0 30px 0;
+
+	h6 {
+		text-transform: uppercase;
+	}
+
+	&.no-hero {
+		background-color: @rawr-dark;
+	}
+
+	&.custom-hero {
+		background-color: @rawr-dark;
+		background-repeat: no-repeat;
+		background-origin: right center;
+	}
+
+	a {
+		color: white;
+	}
+
+	a:visited {
+		color: @rawr-light-blue;
+	}
+
+	h1 {
+		font-size: 3.3em;
+	}
+}
+
+.title-row:first-of-type {
+	padding: 10px 0;
+	margin: 0px 0 30px 0;
+}

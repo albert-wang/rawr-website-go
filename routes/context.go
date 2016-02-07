@@ -7,6 +7,7 @@ import (
 	"github.com/albert-wang/tracederror"
 	"github.com/garyburd/redigo/redis"
 	"github.com/jmoiron/sqlx"
+	"github.com/mitchellh/goamz/aws"
 
 	"github.com/albert-wang/rawr-website-go/config"
 )
@@ -15,13 +16,15 @@ type Context struct {
 	Pool   *redis.Pool
 	DB     *sqlx.DB
 	Config *config.Config
+	Auth   aws.Auth
 }
 
-func CreateContext(DB *sqlx.DB, p *redis.Pool, cfg *config.Config) *Context {
+func CreateContext(DB *sqlx.DB, p *redis.Pool, auth aws.Auth, cfg *config.Config) *Context {
 	return &Context{
 		Pool:   p,
 		DB:     DB,
 		Config: cfg,
+		Auth:   auth,
 	}
 }
 

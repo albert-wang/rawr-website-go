@@ -25,7 +25,7 @@ func getPost(w http.ResponseWriter, r *http.Request, ctx routes.Context) error {
 		return tracederror.New(err)
 	}
 
-	recent, err := models.GetRecentBlogPosts(ctx.DB, 4)
+	recent, err := models.GetRecentBlogPosts(ctx.DB, 4, 0)
 	if err != nil {
 		return tracederror.New(err)
 	}

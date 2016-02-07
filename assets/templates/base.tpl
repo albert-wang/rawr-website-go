@@ -55,7 +55,7 @@
 					</li>
 
 					<li>
-						<a href="/blog/recent">
+						<a href="/blog/1">
 							<h1>Blog</h1>
 							<h6>read the blog</h6>
 						</a>

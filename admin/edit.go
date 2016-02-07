@@ -68,6 +68,7 @@ type editBody struct {
 	Title    string
 	Content  string
 	Publish  int32
+	Hero     string
 }
 
 type editResponse struct {
@@ -106,6 +107,7 @@ func postEdit(w http.ResponseWriter, r *http.Request, ctx routes.Context) error 
 	post.Content = res.Content
 	post.Title = res.Title
 	post.CategoryID = res.Category
+	post.Hero = res.Hero
 
 	t := time.Unix(int64(res.Publish), 0)
 	post.Publish = &t

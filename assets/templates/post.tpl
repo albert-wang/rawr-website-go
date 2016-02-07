@@ -17,10 +17,18 @@
 			}).remove();
 		});
 	</script>
+
+	{{ if .Post.Hero }}
+	<style>
+		.feature.custom-hero {
+			background-image: {{ darkenimg .Post.Hero }};
+		}
+	</style>
+	{{ end }}
 {{ end }}
 
 {{ define "body" }}
-	<div class="row feature no-hero">
+	<div class="row feature {{ if .Post.Hero }}custom-hero{{else}}no-hero{{end}}" data-hero='{{ .Post.Hero }}'>
 		<div class="col-xs-8 col-xs-offset-2">
 			<h6 class="mini-header">{{ .Post.Category }}</h6>
 			<h1>{{ .Post.Title }}</h1>
