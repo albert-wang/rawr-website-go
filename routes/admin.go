@@ -20,7 +20,7 @@ func CheckAuth(r *http.Request, ctx Context) error {
 		return MakeHttpError(err, http.StatusForbidden, r)
 	}
 
-	expected := "5636f04a-f066-4125-8a35-6aea53080f57"
+	expected := ctx.Config.AdminSecret
 	if auth.Value != expected {
 		log.Print("Attempted to access a protected area, but failed to authenticate!")
 		return MakeHttpError(nil, http.StatusForbidden, r)

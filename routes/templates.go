@@ -97,7 +97,7 @@ func templateBlackfriday(mkd string) template.HTML {
 }
 
 func s3img(path string) string {
-	return "//s3.amazonaws.com/img.rawrrawr.com/" + path
+	return "//s3.amazonaws.com/img.rawr.moe/" + path
 }
 
 func add(a, b int) int {

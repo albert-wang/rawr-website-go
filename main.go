@@ -19,6 +19,7 @@ import (
 	"github.com/albert-wang/rawr-website-go/cli"
 	"github.com/albert-wang/rawr-website-go/config"
 	"github.com/albert-wang/rawr-website-go/debug"
+	"github.com/albert-wang/rawr-website-go/gallery"
 	"github.com/albert-wang/rawr-website-go/routes"
 )
 
@@ -55,9 +56,9 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	cfg := config.Config{}
-	err := config.LoadConfigurationFromFileAndEnvironment(os.Args[1], &cfg)
+	err := config.LoadConfigurationFromFileAndEnvironment("config.json", &cfg)
 	if err != nil {
-		log.Fatal("Could not load configuration file=", os.Args[1], " due to error=", err)
+		log.Fatal("Could not load configuration file=config.json due to error=", err)
 	}
 
 	// Open up the DB and Redis connections.
@@ -84,7 +85,7 @@ func main() {
 		log.Fatal("Could not create statsd socket with host=", cfg.RedisHost, " error=", err)
 	}
 
-	auth, err := aws.SharedAuth()
+	auth, err := aws.GetAuth(cfg.AWSAccessKey, cfg.AWSSecretKey)
 	if err != nil {
 		log.Fatal("Could not load aws authentication")
 	}
@@ -92,8 +93,8 @@ func main() {
 	ctx := routes.CreateContext(db, pool, auth, &cfg)
 
 	//Check for arguments.
-	if len(os.Args) > 2 {
-		cli.Dispatch(os.Args[2:], ctx)
+	if len(os.Args) > 1 {
+		cli.Dispatch(os.Args[1:], ctx)
 		return
 	}
 
@@ -104,6 +105,7 @@ func main() {
 
 	blog.RegisterRoutes(router, ctx)
 	admin.RegisterRoutes(router, ctx)
+	gallery.RegisterRoutes(router, ctx)
 	if cfg.Debug {
 		debug.RegisterRoutes(router, ctx)
 	}

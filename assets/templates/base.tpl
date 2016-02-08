@@ -67,13 +67,14 @@
 							<h6>browse the gallery</h6>
 						</a>
 					</li>
-
+					<!--
 					<li>
 						<a href="/projects">
 							<h1>Projects</h1>
 							<h6>what i'm working on</h6>
 						</a>
 					</li>
+					-->
 
 					<li>
 						<a href="/about">

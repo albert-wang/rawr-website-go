@@ -12,20 +12,6 @@ import (
 	"github.com/albert-wang/tracederror"
 )
 
-type Config struct {
-	Debug bool
-	Port  int
-
-	PostgresConnectionURL string
-	RedisHost             string
-	RedisPassword         string
-	StatsDHost            string
-	StatsDPrefix          string
-
-	// Informational bindings.
-	IPAddress string
-}
-
 // Sets fields in a struct from environment variables, according to their `env` tag.
 // Only sets values with a non-empty environment variable, leaves them unmodified otherwise.
 // Only supports string, int and bool variables.

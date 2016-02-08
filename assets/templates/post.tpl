@@ -4,6 +4,16 @@
 	<link rel="stylesheet" href="/static/lib/monokai-sublime.css">
 
 	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({
+	  	jax: ["output/HTML-CSS"],
+	  	asciimath2jax: {delimiters: [['$$','$$']]},
+	  	showProcessingMessages: false,
+	  	showMathMenu: false
+	  });
+	</script>
+
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML"></script>
 	<script src="/static/lib/highlight.pack.js"></script>
 
 	<script>

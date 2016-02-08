@@ -4,6 +4,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 	<script src="/static/lib/simplemde.js"></script>
 
+	<script type="text/x-mathjax-config">
+	  MathJax.Hub.Config({asciimath2jax: {delimiters: [['$$','$$']]}});
+	</script>
+
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_CHTML"></script>
+
 	<link rel="stylesheet" href="/static/css/post.css">
 	<link rel="stylesheet" href="/static/lib/monokai-sublime.css">
 	<script src="/static/lib/highlight.pack.js"></script>
@@ -25,6 +31,7 @@
 					currentPreview = r;
 					preview.innerHTML = "<div class='post postcontent'>" + r + "</div>";
 
+					MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 					$('pre code').each(function(i, block) {
 						hljs.highlightBlock(block);
 					});

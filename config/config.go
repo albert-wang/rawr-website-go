@@ -22,7 +22,13 @@ type Config struct {
 	StatsDHost            string
 	StatsDPrefix          string
 
-	IPAddress string
+	// AWS Bindings
+	AWSAccessKey  string
+	AWSSecretKey  string
+	GalleryBucket string
+
+	IPAddress   string
+	AdminSecret string
 }
 
 // Sets fields in a struct from environment variables, according to their `env` tag.

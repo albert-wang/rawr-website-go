@@ -7,11 +7,20 @@ import (
 )
 
 func Dispatch(args []string, context *routes.Context) {
+	var err error
+
 	switch args[0] {
 	case "import-post":
-		importPost(args, context)
+		err = importPost(args[1:], context)
+
+	case "import-image":
+		err = importImage(args[1:], context)
 
 	default:
 		log.Fatal("Unknown commandline option ", args[0])
+	}
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }
