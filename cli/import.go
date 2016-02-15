@@ -7,12 +7,15 @@ import (
 	"io/ioutil"
 	"log"
 	"mime"
+	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/albert-wang/rawr-website-go/routes"
 	"github.com/albert-wang/tracederror"
+	"github.com/atotto/clipboard"
 
 	"github.com/mitchellh/goamz/s3"
 )
@@ -52,9 +55,15 @@ func importImage(args []string, context *routes.Context) error {
 		return tracederror.New(err)
 	}
 
+	convbinary := "convert"
+	if runtime.GOOS == "windows" {
+		convbinary = "imgconvert"
+	}
+
 	// Step 3: Generate thumbnails/hero by cutting it through the center.
-	target := fmt.Sprintf("/tmp/%s%s", key, ext)
-	cmd := exec.Command("convert", args[1],
+	os.Mkdir("temp", 0777)
+	target := fmt.Sprintf("temp/%s%s", key, ext)
+	cmd := exec.Command(convbinary, args[1],
 		"-gravity", "center",
 		"-resize", "25%",
 		target)
@@ -75,7 +84,7 @@ func importImage(args []string, context *routes.Context) error {
 		return tracederror.New(err)
 	}
 
-	cmd = exec.Command("convert", args[1],
+	cmd = exec.Command(convbinary, args[1],
 		"-gravity", "center",
 		"-crop", "1200x400+0+0",
 		target)
@@ -96,10 +105,25 @@ func importImage(args []string, context *routes.Context) error {
 		return tracederror.New(err)
 	}
 
-	log.Printf("Cleaning cache")
-	conn := context.Pool.Get()
-	defer conn.Close()
+	os.Remove(target)
 
-	conn.Do("DEL", fmt.Sprintf("galleryimages.%s", args[0]))
+	log.Printf("Cleaning cache")
+	clearCache(args, context)
+
+	log.Printf("Saving Original Image URL to Clipboard...")
+
+	url := context.Bucket.URL(fmt.Sprintf("/%s/orig-%s", args[0], key))
+	clipboard.WriteAll(url)
+
 	return nil
+}
+
+func clearCache(args []string, context *routes.Context) error {
+	log.Printf("Cleaning cache")
+	if context.Pool != nil {
+		conn := context.Pool.Get()
+		defer conn.Close()
+
+		conn.Do("DEL", fmt.Sprintf("galleryimages.%s", args[0]))
+	}
 }

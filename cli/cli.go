@@ -16,6 +16,9 @@ func Dispatch(args []string, context *routes.Context) {
 	case "import-image":
 		err = importImage(args[1:], context)
 
+	case "clear-cache":
+		err = clearCache(args[1:], context)
+
 	default:
 		log.Fatal("Unknown commandline option ", args[0])
 	}

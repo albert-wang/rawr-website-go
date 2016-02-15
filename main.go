@@ -61,6 +61,25 @@ func main() {
 		log.Fatal("Could not load configuration file=config.json due to error=", err)
 	}
 
+	//Check for arguments.
+	if len(os.Args) > 1 {
+		auth, err := aws.GetAuth(cfg.AWSAccessKey, cfg.AWSSecretKey)
+		if err != nil {
+			log.Fatal("Could not load aws authentication")
+		}
+
+		pool := createRedisPool(cfg.RedisHost, cfg.RedisPassword)
+		conn := pool.Get()
+		_, err = conn.Do("PING")
+		if err != nil {
+			pool = nil
+		}
+
+		ctx := routes.CreateContext(nil, pool, auth, &cfg)
+		cli.Dispatch(os.Args[1:], ctx)
+		return
+	}
+
 	// Open up the DB and Redis connections.
 	db, err := sqlx.Open("postgres", cfg.PostgresConnectionURL)
 	if err != nil {
@@ -91,12 +110,6 @@ func main() {
 	}
 
 	ctx := routes.CreateContext(db, pool, auth, &cfg)
-
-	//Check for arguments.
-	if len(os.Args) > 1 {
-		cli.Dispatch(os.Args[1:], ctx)
-		return
-	}
 
 	router := mux.NewRouter()
 	router.NotFoundHandler = http.HandlerFunc(routes.NotFound)
