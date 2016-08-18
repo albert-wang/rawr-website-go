@@ -17,4 +17,7 @@ func RegisterRoutes(router *mux.Router, ctx *routes.Context) {
 
 	adminRouter.HandleFunc("/render", routes.Wrap(postRender, ctx)).
 		Methods("POST")
+
+	adminRouter.HandleFunc("/gallery_reset/{gallery}", routes.Wrap(getGalleryReset, ctx)).
+		Methods("GET")
 }

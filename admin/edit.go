@@ -2,7 +2,9 @@ package admin
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -155,4 +157,24 @@ func postRender(w http.ResponseWriter, r *http.Request, ctx routes.Context) erro
 	bodyStr = strings.Replace(bodyStr, "{:longtruncate}", "", 1)
 
 	return routes.RenderTemplateWithData(w, r, tpl, bodyStr)
+}
+
+func getGalleryReset(w http.ResponseWriter, r *http.Request, ctx routes.Context) error {
+	err := routes.CheckAuth(r, ctx)
+	if err != nil {
+		return err
+	}
+
+	vars := mux.Vars(r)
+
+	gallery := vars["gallery"]
+	if ctx.Pool != nil {
+		conn := ctx.Pool.Get()
+		defer conn.Close()
+
+		log.Print("Successfully reset gallery ", gallery)
+		conn.Do("DEL", fmt.Sprintf("galleryimages.%s", gallery))
+	}
+
+	return nil
 }

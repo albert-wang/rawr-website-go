@@ -126,4 +126,5 @@ func clearCache(args []string, context *routes.Context) error {
 
 		conn.Do("DEL", fmt.Sprintf("galleryimages.%s", args[0]))
 	}
+	return nil
 }

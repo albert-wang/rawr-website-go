@@ -128,5 +128,8 @@ func main() {
 	listeningAddress := fmt.Sprintf("localhost:%d", cfg.Port)
 
 	log.Print("Listening on addr=", listeningAddress)
-	http.ListenAndServe(listeningAddress, router)
+	err = http.ListenAndServe(listeningAddress, router)
+	if err != nil {
+		log.Print(err)
+	}
 }

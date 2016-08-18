@@ -14,7 +14,7 @@ import (
 
 type Config struct {
 	Debug bool
-	Port  int
+	Port  int `env:"RWG_PORT"`
 
 	PostgresConnectionURL string
 	RedisHost             string
