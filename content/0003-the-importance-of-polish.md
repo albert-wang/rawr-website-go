@@ -2,7 +2,7 @@
 Title: the importance of polish
 Category: 3
 Hero: 
-Publish: 2012-01-29 08:27:25.037009 +0000 +0000
+Publish:  Jan 29, 2012 8:27am (+0000) 
 +++
 
 There is something that far too many people ignore when writing applications. The importance

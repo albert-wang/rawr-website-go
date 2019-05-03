@@ -2,7 +2,7 @@
 Title: Bad Gateway Problems
 Category: 1
 Hero: 
-Publish: 2013-01-01 18:27:02.395186 +0000 +0000
+Publish:  Jan 1, 2013 6:27pm (+0000) 
 +++
 
 There appear to be some major issues with the node application that runs this website. It crashes after some time, without a visible stack trace or anything. I'm not sure why this happens - the application is running under a daemon that should restart it if it dies, but this appears also not to work.

@@ -2,7 +2,7 @@
 Title: Pipelining - Why it Matters
 Category: 2
 Hero: 
-Publish: 2012-07-24 19:05:19 +0000 +0000
+Publish:  Jul 24, 2012 7:05pm (+0000) 
 +++
 
 While reading Hacker News, I came upon an article that purported that Java (or other high level languages) should be used in preference to C++ due to the quality of modern interpreters and JIT compilers. I will not discuss the conclusion, which is shaky at best, but rather the microbenchmark that was used to display the quality of the Java virtual machine.{:truncate}{:longtruncate}

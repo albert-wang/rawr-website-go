@@ -2,7 +2,7 @@
 Title: Constant speed on a spline
 Category: 1
 Hero: 
-Publish: 2013-05-27 23:37:00.935539 +0000 +0000
+Publish:  May 27, 2013 11:37pm (+0000) 
 +++
 
 Whenever one needs a curve, a spline of some sort is usually involved. The most common forms are 

@@ -2,7 +2,7 @@
 Title: optimizing a vector with sse, and issues that arise
 Category: 2
 Hero: 
-Publish: 2012-03-13 06:40:04.692055 +0000 +0000
+Publish:  Mar 13, 2012 6:40am (+0000) 
 +++
 
 According to the most recent Steam Hardware Survey, 99% of steam users have SSE2 and SSE3

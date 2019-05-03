@@ -2,7 +2,7 @@
 Title: using detours to automate getopenfilenamew
 Category: 3
 Hero: 
-Publish: 2012-01-23 03:12:56.578516 +0000 +0000
+Publish:  Jan 23, 2012 3:12am (+0000) 
 +++
 
 One of the easier things to do with the Win32 API is to automate an application. For any
@@ -83,3 +83,4 @@ need to setup some sort of IPC to communicate intent. The way I set it up, the
 detoured DLL just overwrites GetOpenFileNameW with a function that returns the same 
 data each time, so the launcher just sets up a shared memory region and waits
 for the DLL to read from it.
+

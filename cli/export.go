@@ -24,12 +24,12 @@ func exportPosts(args []string, context *routes.Context) error {
 		log.Print(err)
 	}
 
-	for i, v := range res {
+	for _, v := range res {
 		cleanTitle := v.Title
 		cleanTitle = strings.ToLower(cleanTitle)
 		cleanTitle = strings.Replace(cleanTitle, " ", "-", -1)
 
-		fname := fmt.Sprintf("%s/%04d-%s.md", args[0], i, cleanTitle)
+		fname := fmt.Sprintf("%s/%04d-%s.md", args[0], v.ID, cleanTitle)
 
 		file, err := os.Create(fname)
 		if err != nil {

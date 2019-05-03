@@ -2,7 +2,7 @@
 Title: writing native node.js in windows
 Category: 2
 Hero: 
-Publish: 2012-01-13 06:35:06.510752 +0000 +0000
+Publish:  Jan 13, 2012 6:35am (+0000) 
 +++
 
 As of Node.js 0.7.0-alpha, there is no blessed path for writing native Node.js extensions on windows. 

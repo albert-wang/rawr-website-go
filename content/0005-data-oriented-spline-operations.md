@@ -2,7 +2,7 @@
 Title: data oriented spline operations
 Category: 3
 Hero: 
-Publish: 2012-02-14 05:10:44.375806 +0000 +0000
+Publish:  Feb 14, 2012 5:10am (+0000) 
 +++
 
 The GPU is the most powerful processing unit in a modern computer, and sadly, much of its processing

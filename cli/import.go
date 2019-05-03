@@ -46,7 +46,10 @@ func importPosts(args []string, context *routes.Context) error {
 			continue
 		}
 
-		id, err := strconv.ParseInt(parts[0], 10, 64)
+		cleanID := strings.TrimLeft(parts[0], args[0] + "/")
+		cleanID = strings.TrimLeft(cleanID, "0")
+
+		id, err := strconv.ParseInt(cleanID, 10, 64)
 		if err != nil {
 			if len(parts) <= 1 {
 				log.Printf("Skipping file %s due to invalid filename", v)
@@ -54,7 +57,11 @@ func importPosts(args []string, context *routes.Context) error {
 			}
 		}
 
-		post, _ := models.GetBlogPostByID(tx, int32(id))
+		log.Printf("Processing id: %d (%s)", id, cleanID)
+		post, err := models.GetBlogPostByID(tx, int32(id))
+		if err != nil {
+			log.Print(err)
+		}
 
 		file, err := os.Open(v)
 		if err != nil {
@@ -73,7 +80,7 @@ func importPosts(args []string, context *routes.Context) error {
 			scanner.Scan()
 			text := scanner.Text()
 			for text != "+++" {
-				parts = strings.Split(text, ":")
+				parts = strings.SplitN(text, ":", 2)
 				if len(parts) != 2 {
 					log.Print("Invalid key-value pair: ", text)
 				} else {
@@ -111,6 +118,13 @@ func importPosts(args []string, context *routes.Context) error {
 			rest = strings.TrimSpace(rest)
 			post.Content = rest
 			post.Save(tx)
+
+			date := "<nil>"
+			if post.Publish != nil {
+				date = post.Publish.Format("Jan 2, 2006 3:04pm")
+			}
+
+			log.Printf("%d - %s %s %s", post.ID, post.Title, date, post.Hero)
 		}
 	}
 
