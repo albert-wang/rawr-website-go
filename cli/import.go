@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bufio"
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
@@ -11,8 +12,11 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
+	"time"
 
+	"github.com/albert-wang/rawr-website-go/models"
 	"github.com/albert-wang/rawr-website-go/routes"
 	"github.com/albert-wang/tracederror"
 	"github.com/atotto/clipboard"
@@ -20,10 +24,97 @@ import (
 	"github.com/mitchellh/goamz/s3"
 )
 
-func importPost(args []string, context *routes.Context) error {
-	//Args in the format
-	// <n>.mkd hero title category time
-	return nil
+func importPosts(args []string, context *routes.Context) error {
+	if len(args) != 1 {
+		return fmt.Errorf("usage: <content-directory>")
+	}
+
+	matches, err := filepath.Glob(fmt.Sprintf("%s/*.md", args[0]))
+	if err != nil {
+		return err
+	}
+
+	tx, err := context.DB.Beginx()
+	if err != nil {
+		return err
+	}
+
+	for _, v := range matches {
+		parts := strings.Split(v, "-")
+		if len(parts) <= 1 {
+			log.Printf("Skipping file %s due to invalid filename", v)
+			continue
+		}
+
+		id, err := strconv.ParseInt(parts[0], 10, 64)
+		if err != nil {
+			if len(parts) <= 1 {
+				log.Printf("Skipping file %s due to invalid filename", v)
+				continue
+			}
+		}
+
+		post, _ := models.GetBlogPostByID(tx, int32(id))
+
+		file, err := os.Open(v)
+		if err != nil {
+			log.Print(err)
+			continue
+		}
+
+		scanner := bufio.NewScanner(file)
+		if scanner.Scan() {
+			first := scanner.Text()
+			if first != "+++" {
+				log.Print("Invalid post format, expected meta block. File: ", v)
+				continue
+			}
+
+			scanner.Scan()
+			text := scanner.Text()
+			for text != "+++" {
+				parts = strings.Split(text, ":")
+				if len(parts) != 2 {
+					log.Print("Invalid key-value pair: ", text)
+				} else {
+					cleanTag := strings.TrimSpace(strings.ToLower(parts[0]))
+					cleanValue := strings.TrimSpace(parts[1])
+					switch cleanTag {
+					case "title":
+						post.Title = cleanValue
+						break
+					case "category":
+						v, _ := strconv.ParseInt(cleanValue, 10, 64)
+						post.CategoryID = int32(v)
+						break
+					case "hero":
+						post.Hero = cleanValue
+						break
+
+					case "publish":
+						res, err := time.Parse("Jan 2, 2006 3:04pm (MST)", cleanValue)
+						if err == nil {
+							post.Publish = &res
+						}
+					}
+				}
+
+				scanner.Scan()
+				text = scanner.Text()
+			}
+
+			rest := ""
+			for scanner.Scan() {
+				rest += scanner.Text() + "\n"
+			}
+
+			rest = strings.TrimSpace(rest)
+			post.Content = rest
+			post.Save(tx)
+		}
+	}
+
+	return tx.Commit()
 }
 
 func importImage(args []string, context *routes.Context) error {

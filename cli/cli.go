@@ -10,8 +10,8 @@ func Dispatch(args []string, context *routes.Context) {
 	var err error
 
 	switch args[0] {
-	case "import-post":
-		err = importPost(args[1:], context)
+	case "import-posts":
+		err = importPosts(args[1:], context)
 
 	case "import-image":
 		err = importImage(args[1:], context)
