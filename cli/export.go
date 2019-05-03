@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"log"
 	"strings"
 	"text/template"
 
@@ -16,8 +17,12 @@ func exportPosts(args []string, context *routes.Context) error {
 		return err
 	}
 
-	tpl := template.New("assets/templates/export.tpl")
-	tpl.ParseFiles("assets/templates/export.tpl")
+	tpl := template.New("export.tpl")
+	tpl, err = tpl.ParseFiles("assets/templates/export.tpl")
+	if err != nil {
+		log.Print(err)
+	}
+
 	for _, v := range res {
 		cleanTitle := v.Title
 		cleanTitle = strings.ToLower(cleanTitle)
