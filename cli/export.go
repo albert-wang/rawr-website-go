@@ -2,6 +2,7 @@ package cli
 
 import (
 	"os"
+	"fmt"
 	"log"
 	"strings"
 	"text/template"
@@ -23,12 +24,14 @@ func exportPosts(args []string, context *routes.Context) error {
 		log.Print(err)
 	}
 
-	for _, v := range res {
+	for i, v := range res {
 		cleanTitle := v.Title
 		cleanTitle = strings.ToLower(cleanTitle)
 		cleanTitle = strings.Replace(cleanTitle, " ", "-", -1)
 
-		file, err := os.Create(args[0] + "/" + cleanTitle + ".md")
+		fname := fmt.Sprintf("%s/%04d-%s.md", args[0], i, cleanTitle)
+
+		file, err := os.Create(fname)
 		if err != nil {
 			return err
 		}
