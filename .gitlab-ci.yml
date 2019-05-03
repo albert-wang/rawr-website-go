@@ -1,0 +1,39 @@
+variables:
+  REPO_NAME: github.com/albert-wang/rawr-website-go
+
+before_script:
+  - rm -rf $GOPTH/src/
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - cd $GOPATH/src/$REPO_NAME
+
+stages:
+  - build
+  - deploy
+
+compile:
+  image: golang:latest
+  stage: build
+  script:
+    - git checkout -B gitlab-ci
+    - go get -u -f
+    - GOOS=linux go build
+  artifacts:
+    paths:
+      - rawr-website-go
+
+deploy:
+  stage: deploy
+  only:
+    - production
+  tags:
+    - shell
+  script:
+    - cd /home/rawr/go/src/github.com/albert-wang/rawr-website-go 
+    - nvm use v10.15.3
+    - npm install -g gulp@^3.0.0
+    - npm install gulp@^3.0.0
+    - gulp
+    - go build
+    - ./rawr-website-go import-posts content
+    - systemctl restart rawr.moe
