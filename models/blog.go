@@ -63,11 +63,15 @@ func (b *BlogPost) Save(db sqlx.Ext) error {
 		err = rows.Scan(&b.ID)
 		return err
 	} else {
-		q := `UPDATE blog_posts SET 
+			q := `INSERT INTO blog_posts ( id, category, title, content, publish, hero) 
+			VALUES(:id,:category,:title,:content,:publish,:hero)
+			ON CONFLICT (id) DO UPDATE
+			SET 
 			category = :category, title = :title, content = :content, publish = :publish,
 			hero = :hero
-			WHERE id = :id
-		`
+				RETURNING id
+				`
+
 		_, err := sqlx.NamedExec(db, q, b)
 		return err
 	}

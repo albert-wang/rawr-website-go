@@ -60,7 +60,7 @@ func importPosts(args []string, context *routes.Context) error {
 		log.Printf("Processing id: %d (%s)", id, cleanID)
 		post, err := models.GetBlogPostByID(tx, int32(id))
 		if err != nil {
-			log.Print(err)
+			post.ID = int32(id)
 		}
 
 		file, err := os.Open(v)
