@@ -19,6 +19,9 @@ func Dispatch(args []string, context *routes.Context) {
 	case "clear-cache":
 		err = clearCache(args[1:], context)
 
+	case "export-posts":
+		err = exportPosts(args[1:], context)
+
 	default:
 		log.Fatal("Unknown commandline option ", args[0])
 	}

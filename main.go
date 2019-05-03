@@ -75,7 +75,18 @@ func main() {
 			pool = nil
 		}
 
-		ctx := routes.CreateContext(nil, pool, auth, &cfg)
+		// Open up the DB and Redis connections.
+		db, err := sqlx.Open("postgres", cfg.PostgresConnectionURL)
+		if err != nil {
+			log.Fatal("Could not open postgres connection with url=", cfg.PostgresConnectionURL, " error=", err)
+		}
+
+		err = db.Ping()
+		if err != nil {
+			log.Fatal("Could not ping postgres connection with url=", cfg.PostgresConnectionURL, " error=", err)
+		}
+
+		ctx := routes.CreateContext(db, pool, auth, &cfg)
 		cli.Dispatch(os.Args[1:], ctx)
 		return
 	}
